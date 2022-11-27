@@ -33,4 +33,9 @@ public class ReviewService {
                 "리뷰 등록이 성공 했습니다.");
     }
 
+    public Review getReview(Long id) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("해당 id가 없습니다"));
+        return review;
+    }
 }
