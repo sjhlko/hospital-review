@@ -22,13 +22,7 @@ public class ReviewController {
     @GetMapping("/{id}")
     public ResponseEntity<ReviewReadResponse> get(@PathVariable Long id){
         Review review = reviewService.getReview(id);
-        ReviewReadResponse response = ReviewReadResponse.builder()
-                .id(review.getId())
-                .title(review.getTitle())
-                .content(review.getContent())
-                .userName(review.getUserName())
-                .hospitalName(review.getHospital().getHospitalName())
-                .build();
+        ReviewReadResponse response = ReviewReadResponse.fromEntity(review);
         return ResponseEntity.ok().body(response);
     }
 }
