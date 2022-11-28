@@ -3,6 +3,8 @@ package com.hospital.hospitalreview.service;
 import com.hospital.hospitalreview.domain.User;
 import com.hospital.hospitalreview.domain.dto.UserDto;
 import com.hospital.hospitalreview.domain.dto.UserJoinRequest;
+import com.hospital.hospitalreview.exception.ErrorCode;
+import com.hospital.hospitalreview.exception.HospitalReviewAppException;
 import com.hospital.hospitalreview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,7 @@ public class UserService {
 
         userRepository.findByUserName(request.getUserName())
                 .ifPresent(user -> {
-                    throw new RuntimeException("아이디 중복");
+                    throw new HospitalReviewAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("username:%s",request.getUserName()));
                 });
 
         User savedUser = userRepository.save(request.toEntity());
