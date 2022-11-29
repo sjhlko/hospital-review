@@ -7,12 +7,16 @@ import com.hospital.hospitalreview.exception.ErrorCode;
 import com.hospital.hospitalreview.exception.HospitalReviewAppException;
 import com.hospital.hospitalreview.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder encoder;
+
+
     public UserDto join(UserJoinRequest request){
 
         //유저아이디 중복처리 ->  예외처리
@@ -25,7 +29,7 @@ public class UserService {
                     throw new HospitalReviewAppException(ErrorCode.DUPLICATED_USER_NAME, String.format("username:%s",request.getUserName()));
                 });
 
-        User savedUser = userRepository.save(request.toEntity());
+        User savedUser = userRepository.save(request.toEntity(encoder.encode(request.getPassword())));
         return UserDto.builder()
                 .id(savedUser.getId())
                 .userName(savedUser.getUserName())

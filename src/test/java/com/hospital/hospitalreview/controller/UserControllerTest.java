@@ -5,6 +5,8 @@ import com.hospital.hospitalreview.domain.dto.UserDto;
 import com.hospital.hospitalreview.domain.dto.UserJoinRequest;
 import com.hospital.hospitalreview.exception.ErrorCode;
 import com.hospital.hospitalreview.exception.HospitalReviewAppException;
+import com.hospital.hospitalreview.service.HospitalService;
+import com.hospital.hospitalreview.service.ReviewService;
 import com.hospital.hospitalreview.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,7 +31,6 @@ class UserControllerTest {
     MockMvc mockMvc;
     @MockBean
     UserService userService;
-
     @Autowired
     ObjectMapper objectMapper;
 
