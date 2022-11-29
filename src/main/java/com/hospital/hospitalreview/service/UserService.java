@@ -6,7 +6,9 @@ import com.hospital.hospitalreview.domain.dto.UserJoinRequest;
 import com.hospital.hospitalreview.exception.ErrorCode;
 import com.hospital.hospitalreview.exception.HospitalReviewAppException;
 import com.hospital.hospitalreview.repository.UserRepository;
+import com.hospital.hospitalreview.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
 
+    @Value("${jwt.token.secret}")
+    private String secretKey;
+    private long expireTimeMs = 1000 * 60 * 60;
 
     public UserDto join(UserJoinRequest request){
 
@@ -35,5 +40,15 @@ public class UserService {
                 .userName(savedUser.getUserName())
                 .email(savedUser.getEmailAddress())
                 .build();
+    }
+
+    public String login(String userName, String password) {
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(()-> new HospitalReviewAppException(ErrorCode.NOT_FOUND, String.format("%s를 찾을 수 없음",userName)));
+        if(!encoder.matches(password,user.getPassword())){
+            throw new HospitalReviewAppException(ErrorCode.INVALID_PASSWORD, String.format("id%s가 비번 %s와 매치되지않음",userName,password));
+        }
+
+        return JwtTokenUtil.createToken(userName, secretKey, expireTimeMs);
     }
 }

@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -37,16 +38,16 @@ class UserControllerTest {
     ObjectMapper objectMapper;
 
 
+    UserJoinRequest userJoinRequest = UserJoinRequest.builder()
+            .userName("헝지")
+            .password("123")
+            .email("ss@naver.com")
+            .build();
 
     @Test
     @DisplayName("회원가입 성공")
     @WithMockUser
     void join_success() throws Exception{
-        UserJoinRequest userJoinRequest = UserJoinRequest.builder()
-                .userName("헝지")
-                .password("123")
-                .email("ss@naver.com")
-                .build();
 
         when(userService.join(any())).thenReturn(mock(UserDto.class));
 
@@ -64,12 +65,6 @@ class UserControllerTest {
     @WithMockUser
     void join_fail() throws Exception {
 
-        UserJoinRequest userJoinRequest = UserJoinRequest.builder()
-                .userName("헝지")
-                .password("123")
-                .email("ss@naver.com")
-                .build();
-
         when(userService.join(any())).thenThrow(new HospitalReviewAppException(ErrorCode.DUPLICATED_USER_NAME, ""));
 
         mockMvc.perform(post("/api/v1/users/join")
@@ -78,6 +73,37 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsBytes(userJoinRequest)))
                 .andDo(print())
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    @DisplayName("로그인 실패_ id업슴")
+    @WithMockUser
+    void login_fail1() throws Exception{
+        String id = "헝지";
+        String password = "1234";
+        when(userService.login(any(),any())).thenThrow(new HospitalReviewAppException(ErrorCode.NOT_FOUND, ""));
+
+        mockMvc.perform(post("/api/v1/users/join")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(userJoinRequest)))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    @DisplayName("로그인 실패_ password 잘못됨")
+    @WithMockUser
+    void login_fail2() throws Exception{
+
+    }
+
+    @Test
+    @DisplayName("로그인성공")
+    @WithMockUser
+    void login_success() throws Exception{
+
     }
 
 }
