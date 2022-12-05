@@ -1,5 +1,6 @@
 package com.hospital.hospitalreview.configuration;
 
+import com.hospital.hospitalreview.domain.User;
 import com.hospital.hospitalreview.service.UserService;
 import com.hospital.hospitalreview.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +53,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String userName = JwtTokenUtil.getUserName(token,secretKey);
         log.info("user Name :{}", userName);
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("", null, List.of(new SimpleGrantedAuthority("USER"))    );
+        User user = userService.getUserByUserName(userName);
+        log.info("userRole: {}",user.getRole());
+
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(), null, List.of(new SimpleGrantedAuthority(user.getRole().name()))    );
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request, response);
