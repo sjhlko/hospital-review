@@ -17,14 +17,14 @@ public class HospitalReadResponse {
      private Long id;
      private String hospitalName;
      private String roadNameAddress;
-     private List<ReviewReadResponse> reviews;
+     private List<HospitalReviewReadResponse> reviews;
 
      public static HospitalReadResponse fromEntity(Hospital hospital){
           return HospitalReadResponse.builder()
                   .id(hospital.getId())
                   .hospitalName(hospital.getHospitalName())
                   .roadNameAddress(hospital.getRoadNameAddress())
-                  .reviews(hospital.getReviews().stream().map(review -> ReviewReadResponse.fromEntity(review)).collect(Collectors.toList()))
+                  .reviews(hospital.getHospitalReviews().stream().map(review -> HospitalReviewReadResponse.fromEntity(review)).collect(Collectors.toList()))
                   .build();
      }
 }

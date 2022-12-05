@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class ReviewCreateRequest {
-    private Long hospitalId;
-    private String userName;
+public class HospitalReviewCreateResponse {
+    private Long id;
     private String title;
     private String content;
+    private String userName;
     private String message;
 }

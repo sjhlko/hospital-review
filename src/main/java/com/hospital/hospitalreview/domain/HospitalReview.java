@@ -6,14 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Review {
+public class HospitalReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
