@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/reviews")
+@RequestMapping("/api/v1/hospitals/reviews")
 @Slf4j
 @RequiredArgsConstructor //필요한 argument를 constructor로 변경해줌
 public class HospitalReviewController {
